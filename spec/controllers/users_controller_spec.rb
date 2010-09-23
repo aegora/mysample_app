@@ -3,7 +3,9 @@ require 'spec_helper'
 describe UsersController do
   render_views
 
-
+ before(:each) do
+     @base_title = "Ruby on Rails Tutorial Sample App" 
+  end
 
  describe "GET 'show'" do
     
@@ -23,7 +25,8 @@ describe UsersController do
     
      it "should have the right title" do
       get :show, :id => @user
-      response.should have_selector("title", :content => @user.name)
+      response.should have_selector("title", 
+        :content => @base_title + " | " + @user.name)
     end
 
     it "should include the user's name" do
@@ -76,7 +79,8 @@ describe UsersController do
       
       it "should have the right title" do
         post :create, :user => @attr
-        response.should have_selector("title", :content => "Sign Up")
+        response.should have_selector("title", 
+	:content => @base_title + " | " + "Sign Up")
       end
           
       it "should render the 'new' page" do
@@ -109,8 +113,26 @@ describe UsersController do
       end
 
     end
+  end
+  
+   describe "authentication of edit/update pages" do
 
+    before(:each) do
+      @user = Factory(:user)
+    end
     
+    describe "for non-signed-in users" do
+      
+      it "should deny access to 'edit'" do
+        get :edit, :id => @user
+        response.should redirect_to(signin_path)
+      end
+    
+      it "should deny access to 'update'" do
+        put :update, :id => @user, :user => {}
+        response.should redirect_to(signin_path)
+      end
+    end
   end
 
   
