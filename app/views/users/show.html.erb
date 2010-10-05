@@ -5,10 +5,16 @@
         <%= gravatar_for @user %>
         <%= @user.name %>
       </h1>
+      <br /><strong>My Characters:</strong> <br />
+      <% unless @user.characters.empty? %>
+        <table class="characters" summary="User's characters">
+          <%= render @characters %>
+        </table>
+        <%= will_paginate @characters %>
+      <% end %>
     </td>
     <td class="sidebar round">
-      <strong>Name</strong> <%= @user.name %><br />
-      <strong>URL</strong>  <%= link_to user_path(@user), @user %>
+      <%= link_to "New Character", newchar_path %>
     </td>
   </tr>
 </table>
